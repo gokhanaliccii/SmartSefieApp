@@ -16,6 +16,7 @@ import com.onfido.android.techtask.facedetector.FirebaseFaceDetector
 import com.onfido.android.techtask.util.QUICKLY
 import com.onfido.android.techtask.util.SLOWLY
 import com.onfido.android.techtask.util.appear
+import com.onfido.android.techtask.util.bind
 import com.onfido.android.techtask.util.disappear
 import com.onfido.android.techtask.util.scaleDown
 import com.onfido.android.techtask.util.vibrateWith
@@ -31,9 +32,9 @@ class CameraActivity : AppCompatActivity() {
         const val STATE_CAMERA_RESULT = "camera_result"
     }
 
-    private lateinit var takePicture: Button
-    private lateinit var statefulView: StatefulView
-    private lateinit var cameraView: OnfidoCameraView
+    private val takePicture by bind<Button>(R.id.action_take_picture)
+    private val statefulView by bind<StatefulView>(R.id.stateful_view)
+    private val cameraView by bind<OnfidoCameraView>(R.id.camera_view)
     private lateinit var capturedFrame: View
     private lateinit var capturedPicture: ImageView
     private lateinit var dismissCapturedPicture: View
@@ -46,10 +47,7 @@ class CameraActivity : AppCompatActivity() {
 
         setContentView(R.layout.activity_camera)
 
-        initUI()
-
         statefulView.viewReadyCallback {
-
             val pictureResult = statefulView.getView<View>(STATE_CAMERA_RESULT)
             capturedPicture = pictureResult.findViewById(R.id.image_picture_preview)
             capturedFrame = pictureResult.findViewById(R.id.frame_preview)
@@ -78,12 +76,6 @@ class CameraActivity : AppCompatActivity() {
             cameraView.addFrameProcessor(faceDetector)
             faceDetector.start()
         }
-    }
-
-    private fun initUI() {
-        cameraView = findViewById(R.id.camera_view)
-        takePicture = findViewById(R.id.action_take_picture)
-        statefulView = findViewById(R.id.stateful_view)
     }
 
     private fun returnToPreviewScreen() {
@@ -142,6 +134,8 @@ class CameraActivity : AppCompatActivity() {
         // currently we had only camera permission
         if (CAMERA_PERMISSION_REQUEST == requestCode && grantResults.isNotEmpty()) {
             cameraPermissionPermitted()
+        } else {
+
         }
     }
 
