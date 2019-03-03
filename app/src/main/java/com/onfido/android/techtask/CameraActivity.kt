@@ -1,8 +1,10 @@
 package com.onfido.android.techtask
 
 import android.Manifest
+import android.content.Context
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.os.Bundle
+import android.os.Vibrator
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
@@ -16,6 +18,7 @@ import com.onfido.android.techtask.util.SLOWLY
 import com.onfido.android.techtask.util.appear
 import com.onfido.android.techtask.util.disappear
 import com.onfido.android.techtask.util.scaleDown
+import com.onfido.android.techtask.util.vibrateWith
 import com.onfido.android.techtask.widget.StatefulView
 import com.onfido.android.techtask.widget.camera.OnfidoCameraView
 import com.onfido.android.techtask.widget.camera.facedetection.FaceBound
@@ -36,6 +39,7 @@ class CameraActivity : AppCompatActivity() {
     private lateinit var capturedPictureFrame: View
     private lateinit var dismissCapturedView: View
     private lateinit var statefulView: StatefulView
+    private val vibrator by lazy { applicationContext.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator }
 
     private lateinit var firebaseFaceDetector: FirebaseFaceDetector
 
@@ -55,7 +59,8 @@ class CameraActivity : AppCompatActivity() {
             dismissCapturedView = pictureResult.findViewById(R.id.dismiss_picture)
 
             takePicture.setOnClickListener {
-                takePicture()
+                vibrateWith(vibrator)
+                capturePicture()
             }
 
             dismissCapturedView.setOnClickListener {
@@ -81,7 +86,7 @@ class CameraActivity : AppCompatActivity() {
         capturedPicture.scaleDown()
     }
 
-    private fun takePicture() {
+    private fun capturePicture() {
         statefulView.changeState(STATE_CAMERA_RESULT)
         capturedPictureFrame.appear(SLOWLY)
         takePicture.disappear(SLOWLY)
