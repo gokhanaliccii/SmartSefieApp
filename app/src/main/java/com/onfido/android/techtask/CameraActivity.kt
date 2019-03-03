@@ -6,21 +6,32 @@ import android.os.Bundle
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
+import android.widget.Button
 import com.onfido.android.techtask.widget.camera.OnfidoCameraView
 
 class CameraActivity : AppCompatActivity() {
 
     companion object {
         const val CAMERA_PERMISSION_REQUEST = 1
+        const val TAG = "CameraActivity"
     }
 
     private lateinit var cameraView: OnfidoCameraView
+    private lateinit var button: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_camera)
 
         cameraView = findViewById(R.id.camera_view)
+        button = findViewById(R.id.action_take_picture)
+
+        button.setOnClickListener {
+            cameraView.takePicture {
+                Log.d(TAG, "picture received! ${it.width} ${it.height}")
+            }
+        }
     }
 
     override fun onStart() {
