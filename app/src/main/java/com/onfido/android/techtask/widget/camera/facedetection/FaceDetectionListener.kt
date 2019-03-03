@@ -5,5 +5,5 @@ package com.onfido.android.techtask.widget.camera.facedetection
  */
 interface FaceDetectionListener {
 
-    fun onFaceDetected(faceBounds: FaceBound)
+    fun onFaceDetected(faceBounds: List<FaceBound>)
 }
