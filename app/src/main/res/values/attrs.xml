@@ -8,6 +8,7 @@
 
     <declare-styleable name="StatefulView">
         <attr name="state" format="string" />
+        <attr name="keepOnStack" format="boolean" />
         <attr name="initialState" format="string" />
     </declare-styleable>
 </resources>

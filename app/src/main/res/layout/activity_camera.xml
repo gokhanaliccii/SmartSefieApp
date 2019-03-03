@@ -5,6 +5,7 @@
     android:id="@+id/stateful_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    app:initialState="camera_view"
     tools:context=".CameraActivity">
 
     <com.onfido.android.techtask.widget.camera.OnfidoCameraView

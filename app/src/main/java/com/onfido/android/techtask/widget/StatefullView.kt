@@ -2,16 +2,15 @@ package com.onfido.android.techtask.widget
 
 import android.content.Context
 import android.util.AttributeSet
-import android.util.Pair
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.widget.FrameLayout
 import com.onfido.android.techtask.R
+import com.onfido.android.techtask.widget.statefulview.StateChangeHistory
 import java.util.*
 
-
-typealias ViewLoadCallback = () -> Unit
+typealias ViewReadyCallback = () -> Unit
 
 /**
  * Created by gokhan.alici on 03.03.2019
@@ -21,12 +20,28 @@ open class StatefulView : FrameLayout {
     private var requestStateBeforeDraw: String? = null
 
     private val mStateNames = HashSet<String>()
-    protected var viewReadyCallback: ViewLoadCallback? = null
+    private val backAwareStates = HashSet<String>()
+    private val viewStack = Stack<StateChangeHistory>()
+    protected var viewReadyCallback: ViewReadyCallback? = null
 
     constructor(context: Context) : super(context)
 
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
+
+        attrs?.let {
+            processAttributes(context, attrs)
+        }
+
         attachChildStatesBeforeDraw()
+    }
+
+    private fun processAttributes(context: Context, attrs: AttributeSet?) {
+        val typedArray = context.obtainStyledAttributes(attrs, R.styleable.StatefulView)
+        typedArray.getString(R.styleable.StatefulView_initialState)?.let {
+            viewStack.push(StateChangeHistory(it, false))
+        }
+
+        typedArray.recycle()
     }
 
     private fun attachChildStatesBeforeDraw() {
@@ -52,17 +67,49 @@ open class StatefulView : FrameLayout {
         })
     }
 
-    protected fun addViewState(viewStatePair: Pair<View, String>) {
-        addViewState(viewStatePair.first, viewStatePair.second)
+    protected fun addViewState(viewStatePair: Triple<View, String, Boolean>) {
+        addViewState(viewStatePair.first, viewStatePair.second, viewStatePair.third)
     }
 
-    protected fun addViewState(view: View, state: String) {
+    protected fun addViewState(view: View, state: String, keepOnStack: Boolean = false) {
         mStateNames.add(state)
         view.setTag(R.id.statefulViewTagId, state)
+        if (keepOnStack) {
+            backAwareStates.add(state)
+        }
     }
 
-    fun viewReadyCallback(viewReadyCallback: ViewLoadCallback) {
+    fun viewReadyCallback(viewReadyCallback: ViewReadyCallback) {
         this.viewReadyCallback = viewReadyCallback
+    }
+
+    fun onBackPressed(): Boolean {
+        var backConsumed = viewStack.size > 1
+
+        if (viewStack.size > 1) {
+            viewStack.pop()
+            val previousHistory = viewStack.peek()
+            if (previousHistory.visibilityChanged) {
+                changeState(previousHistory.stateName)
+            }
+        }
+
+        return backConsumed
+    }
+
+    fun latestState(): String? {
+        return if (viewStack.size > 0) {
+            viewStack.peek().stateName
+        } else
+            null
+    }
+
+    fun changeState(state: String?) {
+        if (state != null && mStateNames.contains(state)) {
+            if (backAwareStates.contains(state)) {
+                viewStack.push(StateChangeHistory(state, false))
+            }
+        }
     }
 
     fun changeVisibleState(state: String?) {
@@ -80,7 +127,12 @@ open class StatefulView : FrameLayout {
                 .map { currentIndex -> getChildAt(currentIndex) }
                 .firstOrNull { view -> state == view.getTag(R.id.statefulViewTagId) }
 
-            view?.let { it.visibility = View.VISIBLE }
+            view?.let {
+                it.visibility = View.VISIBLE
+                if (backAwareStates.contains(state)) {
+                    viewStack.push(StateChangeHistory(state, true))
+                }
+            }
         }
     }
 
@@ -91,17 +143,18 @@ open class StatefulView : FrameLayout {
                 as T
     }
 
-    private fun toViewState(index: Int): Pair<View, String>? {
+    private fun toViewState(index: Int): Triple<View, String, Boolean>? {
         val child = getChildAt(index)
         if (child == null || child.layoutParams !is StatefulLayoutParams)
             return null
 
         val state = (child.layoutParams as StatefulLayoutParams).state ?: return null
+        val keepOnStack = (child.layoutParams as StatefulLayoutParams).keepOnStack
 
-        return Pair(child, state)
+        return Triple(child, state, keepOnStack)
     }
 
-    private fun withoutAlreadyAddedStates(viewStatePair: Pair<View, String>): Boolean {
+    private fun withoutAlreadyAddedStates(viewStatePair: Triple<View, String, Boolean>): Boolean {
         return viewStatePair.second != null && !mStateNames.contains(viewStatePair.second)
     }
 
@@ -109,18 +162,20 @@ open class StatefulView : FrameLayout {
         return StatefulLayoutParams(context, attrs)
     }
 
-    override fun checkLayoutParams(p: ViewGroup.LayoutParams): Boolean {
-        return p is StatefulLayoutParams
+    override fun checkLayoutParams(params: ViewGroup.LayoutParams): Boolean {
+        return params is StatefulLayoutParams
     }
 
     class StatefulLayoutParams(c: Context, attrs: AttributeSet?) :
         FrameLayout.LayoutParams(c, attrs) {
 
         var state: String? = null
+        var keepOnStack: Boolean = false
 
         init {
             val typedArray = c.obtainStyledAttributes(attrs, R.styleable.StatefulView)
             state = typedArray.getString(R.styleable.StatefulView_state)
+            keepOnStack = typedArray.getBoolean(R.styleable.StatefulView_keepOnStack, false)
             typedArray.recycle()
         }
     }

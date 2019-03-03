@@ -26,6 +26,7 @@ class CameraActivity : AppCompatActivity() {
     companion object {
         const val CAMERA_PERMISSION_REQUEST = 1
         const val TAG = "CameraActivity"
+        const val STATE_CAMERA_VIEW = "camera_view"
         const val STATE_CAMERA_RESULT = "camera_result"
     }
 
@@ -34,6 +35,7 @@ class CameraActivity : AppCompatActivity() {
     private lateinit var capturedPicture: ImageView
     private lateinit var capturedPictureFrame: View
     private lateinit var dismissCapturedView: View
+    private lateinit var statefulView: StatefulView
 
     private lateinit var firebaseFaceDetector: FirebaseFaceDetector
 
@@ -44,7 +46,7 @@ class CameraActivity : AppCompatActivity() {
         cameraView = findViewById(R.id.camera_view)
         takePicture = findViewById(R.id.action_take_picture)
 
-        val statefulView = findViewById<StatefulView>(R.id.stateful_view)
+        statefulView = findViewById(R.id.stateful_view)
         statefulView.viewReadyCallback {
             val pictureResult = statefulView.getView<View>(STATE_CAMERA_RESULT)
 
@@ -53,18 +55,11 @@ class CameraActivity : AppCompatActivity() {
             dismissCapturedView = pictureResult.findViewById(R.id.dismiss_picture)
 
             takePicture.setOnClickListener {
-                capturedPictureFrame.appear(SLOWLY)
-                takePicture.disappear(SLOWLY)
-
-                cameraView.takePicture {
-                    capturedPicture.setImageBitmap(it)
-                }
+                takePicture()
             }
 
             dismissCapturedView.setOnClickListener {
-                capturedPictureFrame.disappear(QUICKLY)
-                takePicture.appear(QUICKLY)
-                capturedPicture.scaleDown()
+                returnToPreviewScreen()
             }
 
             firebaseFaceDetector = FirebaseFaceDetector()
@@ -77,6 +72,22 @@ class CameraActivity : AppCompatActivity() {
 
             cameraView.addFrameProcessor(firebaseFaceDetector)
             firebaseFaceDetector.start()
+        }
+    }
+
+    private fun returnToPreviewScreen() {
+        capturedPictureFrame.disappear(QUICKLY)
+        takePicture.appear(QUICKLY)
+        capturedPicture.scaleDown()
+    }
+
+    private fun takePicture() {
+        statefulView.changeState(STATE_CAMERA_RESULT)
+        capturedPictureFrame.appear(SLOWLY)
+        takePicture.disappear(SLOWLY)
+
+        cameraView.takePicture {
+            capturedPicture.setImageBitmap(it)
         }
     }
 
@@ -123,6 +134,17 @@ class CameraActivity : AppCompatActivity() {
         // currently we had only camera permission
         if (CAMERA_PERMISSION_REQUEST == requestCode && grantResults.isNotEmpty()) {
             cameraPermissionPermitted()
+        }
+    }
+
+    override fun onBackPressed() {
+        val backConsumed = statefulView.onBackPressed()
+        if (backConsumed) {
+            if (STATE_CAMERA_VIEW == statefulView.latestState()) {
+                returnToPreviewScreen()
+            }
+        } else {
+            super.onBackPressed()
         }
     }
 }
