@@ -16,7 +16,15 @@ buildscript {
     }
 }
 
+plugins {
+    id "io.gitlab.arturbosch.detekt" version "1.0.0-RC12"
+}
+
+
 allprojects {
+    apply from: "$rootDir/tools/detekt.gradle"
+    apply from: "$rootDir/tools/klint.gradle"
+
     repositories {
         google()
         jcenter()
