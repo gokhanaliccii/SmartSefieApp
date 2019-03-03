@@ -31,6 +31,8 @@ dependencies {
     implementation libraries.constraintLayout
     implementation libraries.firabeseMLVision
     implementation libraries.firabeseMLFaceModel
+    implementation libraries.rxKotlin 
+    implementation libraries.rxAndroid
 
     testImplementation testLibraries.junit4
     testImplementation testLibraries.mockK

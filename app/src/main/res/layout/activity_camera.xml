@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:scaleFactor="0.50"
-        app:state="camera_view" />
+        app:state="@string/state_camera_preview" />
 
     <include layout="@layout/view_picture_result" />
 

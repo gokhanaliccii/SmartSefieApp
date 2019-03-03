@@ -3,6 +3,7 @@ package com.onfido.camera
 import android.Manifest
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.SurfaceTexture
 import android.support.annotation.RequiresPermission
 import android.util.AttributeSet
 import android.widget.FrameLayout
@@ -42,10 +43,8 @@ class OnfidoCameraView @JvmOverloads constructor(
     private val fotoapparat: Fotoapparat by lazy { createFotoapparat() }
     private val compositeFrameProcessor = CompositeFrameProcessor()
 
-    //attributes
     private var mirroring = false
-    private var scaleFactor =
-        DEFAULT_SCALE_FACTOR
+    private var scaleFactor = DEFAULT_SCALE_FACTOR
 
     init {
         attrs?.let {
