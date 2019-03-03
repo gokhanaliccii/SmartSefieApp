@@ -9,7 +9,13 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.widget.Button
 import android.widget.ImageView
+import com.google.firebase.ml.vision.FirebaseVision
+import com.google.firebase.ml.vision.common.FirebaseVisionImage
+import com.google.firebase.ml.vision.common.FirebaseVisionImageMetadata
+import com.google.firebase.ml.vision.face.FirebaseVisionFaceDetectorOptions
 import com.onfido.android.techtask.widget.camera.OnfidoCameraView
+import com.onfido.android.techtask.widget.camera.frame.FrameInfo
+import com.onfido.android.techtask.widget.camera.frame.FrameProcessor
 
 class CameraActivity : AppCompatActivity() {
 
@@ -21,6 +27,10 @@ class CameraActivity : AppCompatActivity() {
     private lateinit var cameraView: OnfidoCameraView
     private lateinit var button: Button
     private lateinit var imagePreview: ImageView
+    private var detection = false
+
+    private val firebaseDetectionOptions by lazy { createFirebaseOptions() }
+    private val firebaseFaceDetector by lazy { createFaceVisionDetector() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,6 +44,73 @@ class CameraActivity : AppCompatActivity() {
             cameraView.takePicture {
                 Log.d(TAG, "picture received! ${it.width} ${it.height}")
                 imagePreview.setImageBitmap(it)
+            }
+        }
+
+
+        cameraView.addFrameProcessor(object : FrameProcessor {
+            override fun processFrame(frameMetaData: FrameInfo) {
+                detect(convertFrameToVisionImage2(frameMetaData))
+            }
+        })
+    }
+
+    private fun detect(
+        visionImage: FirebaseVisionImage
+    ) {
+
+        firebaseFaceDetector.detectInImage(visionImage)
+            .addOnCompleteListener {
+                detection = false
+            }
+            .addOnSuccessListener {
+                if (it.size > 0) {
+                    Log.d(TAG, "onSuccess on FirebaseDetection")
+                }
+            }.addOnFailureListener {
+                detection = false
+                Log.d(TAG, "exception on FirebaseDetection")
+            }
+    }
+
+
+    private fun createFaceVisionDetector() =
+        FirebaseVision.getInstance().getVisionFaceDetector(firebaseDetectionOptions)
+
+    private fun createFirebaseOptions(): FirebaseVisionFaceDetectorOptions {
+        return FirebaseVisionFaceDetectorOptions.Builder()
+            .setPerformanceMode(FirebaseVisionFaceDetectorOptions.FAST)
+            .setLandmarkMode(
+                FirebaseVisionFaceDetectorOptions.NO_LANDMARKS
+            )
+            .setClassificationMode(
+                FirebaseVisionFaceDetectorOptions.NO_CLASSIFICATIONS
+            )
+            .setMinFaceSize(0.15f)
+            .enableTracking()
+            .build()
+    }
+
+    private fun convertFrameToVisionImage2(frame: FrameInfo): FirebaseVisionImage {
+        return FirebaseVisionImage.fromByteArray(
+            frame.byteArray,
+            FirebaseVisionImageMetadata.Builder()
+                .setRotation(getFirebaseRotation(frame.rotation))
+                .setWidth(frame.width)   // 480x360 is typically sufficient for
+                .setHeight(frame.height)  // image recognition
+                .setFormat(FirebaseVisionImageMetadata.IMAGE_FORMAT_NV21)
+                .build()
+        )
+    }
+
+    private fun getFirebaseRotation(rotationCompensation: Int): Int {
+        return when (rotationCompensation) {
+            0 -> FirebaseVisionImageMetadata.ROTATION_0
+            90 -> FirebaseVisionImageMetadata.ROTATION_90
+            180 -> FirebaseVisionImageMetadata.ROTATION_180
+            270 -> FirebaseVisionImageMetadata.ROTATION_270
+            else -> {
+                FirebaseVisionImageMetadata.ROTATION_0
             }
         }
     }
