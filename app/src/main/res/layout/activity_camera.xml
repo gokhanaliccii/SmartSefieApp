@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".CameraActivity">
 
-    <io.fotoapparat.view.CameraView
+    <com.onfido.android.techtask.widget.camera.OnfidoCameraView
         android:id="@+id/camera_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
