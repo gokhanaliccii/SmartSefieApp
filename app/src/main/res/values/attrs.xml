@@ -1,11 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <declare-styleable name="OnfidoCameraView">
-        <attr name="scaleFactor" format="float" />
-        <attr name="mirrorTakenPicture" format="boolean" />
-    </declare-styleable>
-
     <declare-styleable name="StatefulView">
         <attr name="state" format="string" />
         <attr name="keepOnStack" format="boolean" />

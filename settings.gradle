@@ -1,1 +1,1 @@
-include ':app', ':onfidocameraview'
+include ':app', ':camera_view'

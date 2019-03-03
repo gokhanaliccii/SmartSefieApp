@@ -12,7 +12,7 @@ import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
-import com.gokhanaliccii.onfidocameraview.widget.camera.OnfidoCameraView
+import com.onfido.camera.OnfidoCameraView
 import com.onfido.android.techtask.facedetection.FirebaseFaceDetector
 import com.onfido.android.techtask.util.QUICKLY
 import com.onfido.android.techtask.util.SLOWLY
