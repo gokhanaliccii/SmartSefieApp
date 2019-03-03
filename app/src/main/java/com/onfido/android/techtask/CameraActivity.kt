@@ -16,6 +16,7 @@ import com.onfido.android.techtask.util.SLOWLY
 import com.onfido.android.techtask.util.appear
 import com.onfido.android.techtask.util.disappear
 import com.onfido.android.techtask.util.scaleDown
+import com.onfido.android.techtask.widget.StatefulView
 import com.onfido.android.techtask.widget.camera.OnfidoCameraView
 import com.onfido.android.techtask.widget.camera.facedetection.FaceBound
 import com.onfido.android.techtask.widget.camera.facedetection.FaceDetectionListener
@@ -25,13 +26,14 @@ class CameraActivity : AppCompatActivity() {
     companion object {
         const val CAMERA_PERMISSION_REQUEST = 1
         const val TAG = "CameraActivity"
+        const val STATE_CAMERA_RESULT = "camera_result"
     }
 
     private lateinit var cameraView: OnfidoCameraView
-    private lateinit var button: Button
-    private lateinit var imagePreview: ImageView
-    private lateinit var frame: View
-    private lateinit var dissmiss: View
+    private lateinit var takePicture: Button
+    private lateinit var capturedPicture: ImageView
+    private lateinit var capturedPictureFrame: View
+    private lateinit var dismissCapturedView: View
 
     private lateinit var firebaseFaceDetector: FirebaseFaceDetector
 
@@ -40,36 +42,42 @@ class CameraActivity : AppCompatActivity() {
         setContentView(R.layout.activity_camera)
 
         cameraView = findViewById(R.id.camera_view)
-        button = findViewById(R.id.action_take_picture)
-        imagePreview = findViewById(R.id.imageview_picture_preview)
-        frame = findViewById(R.id.frame_preview)
-        dissmiss = findViewById(R.id.dismiss_picture)
+        takePicture = findViewById(R.id.action_take_picture)
 
-        button.setOnClickListener {
-            frame.appear(SLOWLY)
-            button.disappear(SLOWLY)
+        val statefulView = findViewById<StatefulView>(R.id.stateful_view)
+        statefulView.viewReadyCallback {
+            val pictureResult = statefulView.getView<View>(STATE_CAMERA_RESULT)
 
-            cameraView.takePicture {
-                imagePreview.setImageBitmap(it)
+            capturedPicture = pictureResult.findViewById(R.id.imageview_picture_preview)
+            capturedPictureFrame = pictureResult.findViewById(R.id.frame_preview)
+            dismissCapturedView = pictureResult.findViewById(R.id.dismiss_picture)
+
+            takePicture.setOnClickListener {
+                capturedPictureFrame.appear(SLOWLY)
+                takePicture.disappear(SLOWLY)
+
+                cameraView.takePicture {
+                    capturedPicture.setImageBitmap(it)
+                }
             }
-        }
 
-        dissmiss.setOnClickListener {
-            frame.disappear(QUICKLY)
-            button.appear(QUICKLY)
-            imagePreview.scaleDown()
-        }
-
-        firebaseFaceDetector = FirebaseFaceDetector()
-        firebaseFaceDetector.faceDetectionListener(object :
-            FaceDetectionListener {
-            override fun onFaceDetected(faceBounds: List<FaceBound>) {
-                Log.d(TAG, "faces detected ${faceBounds.size}")
+            dismissCapturedView.setOnClickListener {
+                capturedPictureFrame.disappear(QUICKLY)
+                takePicture.appear(QUICKLY)
+                capturedPicture.scaleDown()
             }
-        })
 
-        cameraView.addFrameProcessor(firebaseFaceDetector)
-        firebaseFaceDetector.start()
+            firebaseFaceDetector = FirebaseFaceDetector()
+            firebaseFaceDetector.faceDetectionListener(object :
+                FaceDetectionListener {
+                override fun onFaceDetected(faceBounds: List<FaceBound>) {
+                    Log.d(TAG, "faces detected ${faceBounds.size}")
+                }
+            })
+
+            cameraView.addFrameProcessor(firebaseFaceDetector)
+            firebaseFaceDetector.start()
+        }
     }
 
     override fun onStart() {
