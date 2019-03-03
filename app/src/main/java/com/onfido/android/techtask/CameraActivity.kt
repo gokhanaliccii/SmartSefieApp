@@ -12,7 +12,8 @@ import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
-import com.onfido.android.techtask.facedetection.FirebaseFaceDetector
+import com.onfido.camera.OnfidoCameraView
+import com.onfido.android.techtask.facedetector.FirebaseFaceDetector
 import com.onfido.android.techtask.util.QUICKLY
 import com.onfido.android.techtask.util.SLOWLY
 import com.onfido.android.techtask.util.appear
@@ -20,7 +21,6 @@ import com.onfido.android.techtask.util.disappear
 import com.onfido.android.techtask.util.scaleDown
 import com.onfido.android.techtask.util.vibrateWith
 import com.onfido.android.techtask.widget.StatefulView
-import com.onfido.android.techtask.widget.camera.OnfidoCameraView
 import com.onfido.android.techtask.widget.camera.facedetection.FaceBound
 import com.onfido.android.techtask.widget.camera.facedetection.FaceDetectionListener
 
@@ -135,7 +135,6 @@ class CameraActivity : AppCompatActivity() {
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-
         // currently we had only camera permission
         if (CAMERA_PERMISSION_REQUEST == requestCode && grantResults.isNotEmpty()) {
             cameraPermissionPermitted()
