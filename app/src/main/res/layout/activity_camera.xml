@@ -1,39 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.onfido.android.techtask.widget.StatefulView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/stateful_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    app:initialState="camera_view"
     tools:context=".CameraActivity">
 
     <com.onfido.android.techtask.widget.camera.OnfidoCameraView
         android:id="@+id/camera_view"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         app:scaleFactor="0.50"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:state="camera_view" />
 
-    <ImageView
-        android:id="@+id/imageview_picture_preview"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_width="300dp"
-        android:layout_height="300dp" />
-
+    <include layout="@layout/view_picture_result" />
 
     <Button
         android:id="@+id/action_take_picture"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
         android:layout_marginBottom="30dp"
-        android:text="Take"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
+        android:text="Take" />
 
-</android.support.constraint.ConstraintLayout>
+</com.onfido.android.techtask.widget.StatefulView>
