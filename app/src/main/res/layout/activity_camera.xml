@@ -8,7 +8,7 @@
     app:initialState="camera_view"
     tools:context=".CameraActivity">
 
-    <com.onfido.android.techtask.widget.camera.OnfidoCameraView
+    <com.gokhanaliccii.onfidocameraview.widget.camera.OnfidoCameraView
         android:id="@+id/camera_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

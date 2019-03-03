@@ -1,4 +1,4 @@
-package com.onfido.android.techtask.widget.camera.frame
+package com.gokhanaliccii.onfidocameraview.frame
 
 import java.util.*
 

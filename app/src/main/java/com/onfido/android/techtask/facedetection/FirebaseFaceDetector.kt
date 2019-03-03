@@ -8,7 +8,7 @@ import com.google.firebase.ml.vision.face.FirebaseVisionFace
 import com.onfido.android.techtask.widget.camera.facedetection.FaceBound
 import com.onfido.android.techtask.widget.camera.facedetection.FaceDetectionListener
 import com.onfido.android.techtask.widget.camera.facedetection.FaceDetector
-import com.onfido.android.techtask.widget.camera.frame.FrameInfo
+import com.gokhanaliccii.onfidocameraview.frame.FrameInfo
 
 /**
  * Created by gokhan.alici on 03.03.2019

@@ -1,6 +1,6 @@
 package com.onfido.android.techtask.widget.camera.facedetection
 
-import com.onfido.android.techtask.widget.camera.frame.FrameProcessor
+import com.gokhanaliccii.onfidocameraview.frame.FrameProcessor
 
 /**
  * Created by gokhan.alici on 03.03.2019

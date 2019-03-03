@@ -1,4 +1,4 @@
-package com.onfido.android.techtask.widget.camera
+package com.gokhanaliccii.onfidocameraview.widget.camera
 
 import android.Manifest
 import android.content.Context
@@ -6,15 +6,17 @@ import android.graphics.Bitmap
 import android.support.annotation.RequiresPermission
 import android.util.AttributeSet
 import android.widget.FrameLayout
-import com.onfido.android.techtask.R
-import com.onfido.android.techtask.widget.camera.frame.CompositeFrameProcessor
-import com.onfido.android.techtask.widget.camera.frame.FrameInfo
-import com.onfido.android.techtask.widget.camera.frame.FrameProcessor
+import com.gokhanaliccii.onfidocameraview.R
+import com.onfido.android.techtask.widget.camera.CameraPosition
+import com.onfido.android.techtask.widget.camera.CameraPreview
+import com.onfido.android.techtask.widget.camera.PreviewQuality
+import com.gokhanaliccii.onfidocameraview.frame.CompositeFrameProcessor
+import com.gokhanaliccii.onfidocameraview.frame.FrameInfo
+import com.gokhanaliccii.onfidocameraview.frame.FrameProcessor
 import com.onfido.android.techtask.widget.camera.util.modifyBitmap
 import io.fotoapparat.Fotoapparat
 import io.fotoapparat.characteristic.LensPosition
 import io.fotoapparat.configuration.CameraConfiguration
-import io.fotoapparat.log.logcat
 import io.fotoapparat.parameter.ScaleType
 import io.fotoapparat.preview.Frame
 import io.fotoapparat.selector.back

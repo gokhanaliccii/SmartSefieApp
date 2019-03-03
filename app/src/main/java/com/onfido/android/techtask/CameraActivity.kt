@@ -12,6 +12,7 @@ import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
+import com.gokhanaliccii.onfidocameraview.widget.camera.OnfidoCameraView
 import com.onfido.android.techtask.facedetection.FirebaseFaceDetector
 import com.onfido.android.techtask.util.QUICKLY
 import com.onfido.android.techtask.util.SLOWLY
@@ -20,7 +21,6 @@ import com.onfido.android.techtask.util.disappear
 import com.onfido.android.techtask.util.scaleDown
 import com.onfido.android.techtask.util.vibrateWith
 import com.onfido.android.techtask.widget.StatefulView
-import com.onfido.android.techtask.widget.camera.OnfidoCameraView
 import com.onfido.android.techtask.widget.camera.facedetection.FaceBound
 import com.onfido.android.techtask.widget.camera.facedetection.FaceDetectionListener
 
