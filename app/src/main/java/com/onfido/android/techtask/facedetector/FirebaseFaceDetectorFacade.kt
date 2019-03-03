@@ -11,12 +11,14 @@ import com.google.firebase.ml.vision.face.FirebaseVisionFaceDetectorOptions.NO_L
  */
 object FirebaseFaceDetectorFacade {
 
+    private const val MIN_REQUIRED_FACE_SIZE = 0.15f
+
     fun buildFaceDetector(): FirebaseVisionFaceDetector {
         val faceDetectorOptions = FirebaseVisionFaceDetectorOptions.Builder()
             .setPerformanceMode(FirebaseVisionFaceDetectorOptions.FAST)
             .setLandmarkMode(NO_LANDMARKS)
             .setClassificationMode(NO_CLASSIFICATIONS)
-            .setMinFaceSize(0.15f)
+            .setMinFaceSize(MIN_REQUIRED_FACE_SIZE)
             .enableTracking()
             .build()
 

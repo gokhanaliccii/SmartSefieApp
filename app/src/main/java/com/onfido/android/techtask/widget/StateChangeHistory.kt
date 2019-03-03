@@ -1,4 +1,4 @@
-package com.onfido.android.techtask.widget.statefulview
+package com.onfido.android.techtask.widget
 
 /**
  * Created by gokhan.alici on 03.03.2019

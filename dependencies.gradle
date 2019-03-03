@@ -11,6 +11,8 @@ ext {
     fotoapparatVersion = "2.6.1"
     firebaseMLVisionVersion = "19.0.2"
     firebaseMLFaceModelVersion = "17.0.2"
+    rxKotlinVersion = "2.3.0"
+    rxAndroidVersion = "2.1.0"
 
     junit4Version = "4.12"
     testRunnerVersion = "1.0.2"
@@ -23,7 +25,9 @@ ext {
             constraintLayout   : "com.android.support.constraint:constraint-layout:" + constraintLayoutVersion,
             fotoapprat         : "io.fotoapparat:fotoapparat:" + fotoapparatVersion,
             firabeseMLVision   : "com.google.firebase:firebase-ml-vision:" + firebaseMLVisionVersion,
-            firabeseMLFaceModel: "com.google.firebase:firebase-ml-vision-face-model:" + firebaseMLFaceModelVersion
+            firabeseMLFaceModel: "com.google.firebase:firebase-ml-vision-face-model:" + firebaseMLFaceModelVersion,
+            rxKotlin             : "io.reactivex.rxjava2:rxkotlin:" + rxKotlinVersion,
+            rxAndroid            : "io.reactivex.rxjava2:rxandroid:" + rxAndroidVersion,
     ]
 
     testLibraries = [

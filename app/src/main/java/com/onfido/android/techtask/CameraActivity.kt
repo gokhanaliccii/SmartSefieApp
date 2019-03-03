@@ -64,6 +64,7 @@ class CameraActivity : AppCompatActivity() {
             }
 
             dismissCapturedView.setOnClickListener {
+                statefulView.onBackPressed()
                 returnToPreviewScreen()
             }
 
@@ -71,7 +72,10 @@ class CameraActivity : AppCompatActivity() {
             firebaseFaceDetector.faceDetectionListener(object :
                 FaceDetectionListener {
                 override fun onFaceDetected(faceBounds: List<FaceBound>) {
-                    Log.d(TAG, "faces detected ${faceBounds.size}")
+                    if (STATE_CAMERA_VIEW == statefulView.latestState()) {
+                        vibrateWith(vibrator)
+                        capturePicture()
+                    }
                 }
             })
 

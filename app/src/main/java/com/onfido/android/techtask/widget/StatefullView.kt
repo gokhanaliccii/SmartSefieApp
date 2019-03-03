@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.widget.FrameLayout
 import com.onfido.android.techtask.R
-import com.onfido.android.techtask.widget.statefulview.StateChangeHistory
 import java.util.*
 
 typealias ViewReadyCallback = () -> Unit
@@ -130,7 +129,12 @@ open class StatefulView : FrameLayout {
             view?.let {
                 it.visibility = View.VISIBLE
                 if (backAwareStates.contains(state)) {
-                    viewStack.push(StateChangeHistory(state, true))
+                    viewStack.push(
+                        StateChangeHistory(
+                            state,
+                            true
+                        )
+                    )
                 }
             }
         }
