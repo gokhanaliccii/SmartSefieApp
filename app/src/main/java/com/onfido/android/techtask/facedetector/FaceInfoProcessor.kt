@@ -78,6 +78,7 @@ class FaceInfoProcessor {
             .build()
     }
 
+    // Reference: https://firebase.google.com/docs/ml-kit/android/detect-faces
     private fun findFirebaseRotation(rotationCompensation: Int): Int {
         return when (rotationCompensation) {
             0 -> FirebaseVisionImageMetadata.ROTATION_0

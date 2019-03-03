@@ -11,7 +11,6 @@ import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
-import com.onfido.camera.OnfidoCameraView
 import com.onfido.android.techtask.facedetector.FirebaseFaceDetector
 import com.onfido.android.techtask.util.QUICKLY
 import com.onfido.android.techtask.util.SLOWLY
@@ -19,10 +18,12 @@ import com.onfido.android.techtask.util.appear
 import com.onfido.android.techtask.util.bind
 import com.onfido.android.techtask.util.disappear
 import com.onfido.android.techtask.util.scaleDown
+import com.onfido.android.techtask.util.showCameraPermissonDeniedDialog
 import com.onfido.android.techtask.util.vibrateWith
 import com.onfido.android.techtask.widget.StatefulView
 import com.onfido.android.techtask.widget.camera.facedetection.FaceBound
 import com.onfido.android.techtask.widget.camera.facedetection.FaceDetectionListener
+import com.onfido.camera.OnfidoCameraView
 
 class CameraActivity : AppCompatActivity() {
 
@@ -135,7 +136,7 @@ class CameraActivity : AppCompatActivity() {
         if (CAMERA_PERMISSION_REQUEST == requestCode && grantResults.isNotEmpty()) {
             cameraPermissionPermitted()
         } else {
-
+            showCameraPermissonDeniedDialog(this)
         }
     }
 
