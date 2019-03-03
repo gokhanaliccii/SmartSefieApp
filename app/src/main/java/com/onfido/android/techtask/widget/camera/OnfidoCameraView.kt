@@ -8,6 +8,7 @@ import android.support.annotation.RequiresPermission
 import android.util.AttributeSet
 import android.widget.FrameLayout
 import com.onfido.android.techtask.R
+import com.onfido.android.techtask.widget.camera.util.modifyBitmap
 import io.fotoapparat.Fotoapparat
 import io.fotoapparat.configuration.CameraConfiguration
 import io.fotoapparat.log.logcat
@@ -30,7 +31,6 @@ class OnfidoCameraView @JvmOverloads constructor(
 
     private companion object {
         const val FLIP = -1f
-        const val NOT_FLIP = 1f
         const val DEFAULT_SCALE_FACTOR = 0.25f
     }
 
@@ -41,7 +41,6 @@ class OnfidoCameraView @JvmOverloads constructor(
     private var scaleFactor = DEFAULT_SCALE_FACTOR
 
     init {
-
         attrs?.let {
             processAttributes(context, attrs)
         }
@@ -71,7 +70,7 @@ class OnfidoCameraView @JvmOverloads constructor(
         fotoapparat.takePicture()
             .toBitmap()
             .transform {
-                scaleBitmap(it.bitmap, scaleFactor, it.rotationDegrees, mirroring)
+                modifyBitmap(it.bitmap, scaleFactor, it.rotationDegrees * FLIP, mirroring)
             }
             .whenAvailable {
                 it?.let { bitmapPhoto ->
@@ -116,26 +115,5 @@ class OnfidoCameraView @JvmOverloads constructor(
                 logcat()
             )
         )
-    }
-
-    private fun scaleBitmap(
-        rawBitmap: Bitmap,
-        scaleFactor: Float,
-        rotationDegree: Int,
-        mirrorBitmap: Boolean = false
-    ): Bitmap {
-        val matrix = Matrix()
-        matrix.postScale(scaleFactor, scaleFactor)
-        matrix.postRotate(rotationDegree * FLIP)
-        if (mirrorBitmap) {
-            matrix.preScale(NOT_FLIP, FLIP)
-        }
-
-        val resizedBitmap = Bitmap.createBitmap(
-            rawBitmap, 0, 0, rawBitmap.width, rawBitmap.height, matrix, false
-        )
-        rawBitmap.recycle()
-
-        return resizedBitmap
     }
 }
