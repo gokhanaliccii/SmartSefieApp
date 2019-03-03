@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Onfido Task</string>
+
+    <string name="state_camera_preview">camera_view</string>
+    <string name="state_camera_result">camera_result</string>
+    <string name="text_cross">X</string>
 </resources>

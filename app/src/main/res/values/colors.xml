@@ -4,4 +4,5 @@
     <color name="colorPrimaryDark">#0014c0</color>
     <color name="colorAccent">#FF897D</color>
     <color name="colorPreviewFrameBackground">#CC555555</color>
+    <color name="colorDismissButton">#1B1A1A</color>
 </resources>

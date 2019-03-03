@@ -1,5 +1,8 @@
 package com.onfido.android.techtask.widget
 
+/**
+ * Created by gokhan.alici on 04.03.2019
+ */
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
@@ -15,6 +18,7 @@ typealias ViewReadyCallback = () -> Unit
  * Created by gokhan.alici on 03.03.2019
  */
 open class StatefulView : FrameLayout {
+
     private var initialized: Boolean = false
     private var requestStateBeforeDraw: String? = null
 

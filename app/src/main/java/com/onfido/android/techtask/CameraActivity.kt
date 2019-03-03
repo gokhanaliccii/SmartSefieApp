@@ -8,7 +8,6 @@ import android.os.Vibrator
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
@@ -26,50 +25,47 @@ import com.onfido.android.techtask.widget.camera.facedetection.FaceDetectionList
 
 class CameraActivity : AppCompatActivity() {
 
-    companion object {
+    private companion object {
         const val CAMERA_PERMISSION_REQUEST = 1
-        const val TAG = "CameraActivity"
         const val STATE_CAMERA_VIEW = "camera_view"
         const val STATE_CAMERA_RESULT = "camera_result"
     }
 
-    private lateinit var cameraView: OnfidoCameraView
     private lateinit var takePicture: Button
-    private lateinit var capturedPicture: ImageView
-    private lateinit var capturedPictureFrame: View
-    private lateinit var dismissCapturedView: View
     private lateinit var statefulView: StatefulView
-    private val vibrator by lazy { applicationContext.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator }
+    private lateinit var cameraView: OnfidoCameraView
+    private lateinit var capturedFrame: View
+    private lateinit var capturedPicture: ImageView
+    private lateinit var dismissCapturedPicture: View
 
-    private lateinit var firebaseFaceDetector: FirebaseFaceDetector
+    private val faceDetector: FirebaseFaceDetector by lazy { FirebaseFaceDetector() }
+    private val vibrator by lazy { applicationContext.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContentView(R.layout.activity_camera)
 
-        cameraView = findViewById(R.id.camera_view)
-        takePicture = findViewById(R.id.action_take_picture)
+        initUI()
 
-        statefulView = findViewById(R.id.stateful_view)
         statefulView.viewReadyCallback {
-            val pictureResult = statefulView.getView<View>(STATE_CAMERA_RESULT)
 
-            capturedPicture = pictureResult.findViewById(R.id.imageview_picture_preview)
-            capturedPictureFrame = pictureResult.findViewById(R.id.frame_preview)
-            dismissCapturedView = pictureResult.findViewById(R.id.dismiss_picture)
+            val pictureResult = statefulView.getView<View>(STATE_CAMERA_RESULT)
+            capturedPicture = pictureResult.findViewById(R.id.image_picture_preview)
+            capturedFrame = pictureResult.findViewById(R.id.frame_preview)
+            dismissCapturedPicture = pictureResult.findViewById(R.id.dismiss_picture)
 
             takePicture.setOnClickListener {
                 vibrateWith(vibrator)
                 capturePicture()
             }
 
-            dismissCapturedView.setOnClickListener {
+            dismissCapturedPicture.setOnClickListener {
                 statefulView.onBackPressed()
                 returnToPreviewScreen()
             }
 
-            firebaseFaceDetector = FirebaseFaceDetector()
-            firebaseFaceDetector.faceDetectionListener(object :
+            faceDetector.faceDetectionListener(object :
                 FaceDetectionListener {
                 override fun onFaceDetected(faceBounds: List<FaceBound>) {
                     if (STATE_CAMERA_VIEW == statefulView.latestState()) {
@@ -79,20 +75,26 @@ class CameraActivity : AppCompatActivity() {
                 }
             })
 
-            cameraView.addFrameProcessor(firebaseFaceDetector)
-            firebaseFaceDetector.start()
+            cameraView.addFrameProcessor(faceDetector)
+            faceDetector.start()
         }
     }
 
+    private fun initUI() {
+        cameraView = findViewById(R.id.camera_view)
+        takePicture = findViewById(R.id.action_take_picture)
+        statefulView = findViewById(R.id.stateful_view)
+    }
+
     private fun returnToPreviewScreen() {
-        capturedPictureFrame.disappear(QUICKLY)
+        capturedFrame.disappear(QUICKLY)
         takePicture.appear(QUICKLY)
         capturedPicture.scaleDown()
     }
 
     private fun capturePicture() {
         statefulView.changeState(STATE_CAMERA_RESULT)
-        capturedPictureFrame.appear(SLOWLY)
+        capturedFrame.appear(SLOWLY)
         takePicture.disappear(SLOWLY)
 
         cameraView.takePicture {
@@ -112,10 +114,7 @@ class CameraActivity : AppCompatActivity() {
 
     override fun onStop() {
         super.onStop()
-
-        if (hasCameraPermission()) {
-            cameraView.stop()
-        }
+        cameraView.stop()
     }
 
     private fun cameraPermissionPermitted() {
@@ -139,6 +138,7 @@ class CameraActivity : AppCompatActivity() {
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
         // currently we had only camera permission
         if (CAMERA_PERMISSION_REQUEST == requestCode && grantResults.isNotEmpty()) {
             cameraPermissionPermitted()

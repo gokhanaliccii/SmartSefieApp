@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="dismiss_text_size">25sp</dimen>
+    <dimen name="dismiss_button_padding">10dp</dimen>
+
+    <dimen name="preview_image_width">300dp</dimen>
+    <dimen name="preview_image_height">300dp</dimen>
+
+</resources>
