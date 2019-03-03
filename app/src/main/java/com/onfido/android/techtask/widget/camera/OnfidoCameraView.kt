@@ -3,9 +3,11 @@ package com.onfido.android.techtask.widget.camera
 import android.Manifest
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.Matrix
 import android.support.annotation.RequiresPermission
 import android.util.AttributeSet
 import android.widget.FrameLayout
+import com.onfido.android.techtask.R
 import io.fotoapparat.Fotoapparat
 import io.fotoapparat.configuration.CameraConfiguration
 import io.fotoapparat.log.logcat
@@ -29,8 +31,22 @@ class OnfidoCameraView @JvmOverloads constructor(
     private val cameraView by lazy { CameraView(context) }
     private val fotoapparat: Fotoapparat by lazy { createFotoapparat() }
 
+    private var scaleFactor = 0.25f
+
     init {
+
+        attrs?.let {
+            processAttributes(context, attrs)
+        }
+
         addView(cameraView)
+    }
+
+    private fun processAttributes(context: Context, attrs: AttributeSet?) {
+        val typedArray =
+            context.obtainStyledAttributes(attrs, R.styleable.OnfidoCameraView)
+        scaleFactor = typedArray.getFloat(R.styleable.OnfidoCameraView_scaleFactor, scaleFactor)
+        typedArray.recycle()
     }
 
     @RequiresPermission(Manifest.permission.CAMERA, conditional = true)
@@ -45,9 +61,12 @@ class OnfidoCameraView @JvmOverloads constructor(
     override fun takePicture(pictureCallback: (Bitmap) -> Unit) {
         fotoapparat.takePicture()
             .toBitmap()
+            .transform {
+                scaleBitmap(it.bitmap, scaleFactor)
+            }
             .whenAvailable {
                 it?.let { bitmapPhoto ->
-                    pictureCallback(bitmapPhoto.bitmap)
+                    pictureCallback(bitmapPhoto)
                 }
             }
     }
@@ -88,5 +107,17 @@ class OnfidoCameraView @JvmOverloads constructor(
                 logcat()
             )
         )
+    }
+
+    private fun scaleBitmap(rawBitmap: Bitmap, scaleFactor: Float): Bitmap {
+        val matrix = Matrix()
+        matrix.postScale(scaleFactor, scaleFactor)
+
+        val resizedBitmap = Bitmap.createBitmap(
+            rawBitmap, 0, 0, rawBitmap.width, rawBitmap.height, matrix, false
+        )
+        rawBitmap.recycle()
+
+        return resizedBitmap
     }
 }
