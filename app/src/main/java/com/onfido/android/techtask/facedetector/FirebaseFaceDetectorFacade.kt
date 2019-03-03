@@ -1,4 +1,4 @@
-package com.onfido.android.techtask.facedetection
+package com.onfido.android.techtask.facedetector
 
 import com.google.firebase.ml.vision.FirebaseVision
 import com.google.firebase.ml.vision.face.FirebaseVisionFaceDetector

@@ -1,4 +1,4 @@
-package com.onfido.android.techtask.facedetection
+package com.onfido.android.techtask.facedetector
 
 import android.graphics.Rect
 import android.util.Log
