@@ -29,9 +29,16 @@ dependencies {
     implementation libraries.appCompat
     implementation libraries.constraintLayout
     implementation libraries.fotoapprat
+    implementation libraries.fotoapprat
+    implementation libraries.fotoapprat
+    implementation libraries.firabeseMLVision
+    implementation libraries.firabeseMLFaceModel
 
     testImplementation testLibraries.junit4
+    testImplementation testLibraries.mockK
 
     androidTestImplementation androidTestLibraries.testRunner
     androidTestImplementation androidTestLibraries.espresso
 }
+
+apply plugin: 'com.google.gms.google-services'

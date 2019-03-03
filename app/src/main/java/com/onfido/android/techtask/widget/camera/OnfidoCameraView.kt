@@ -3,17 +3,20 @@ package com.onfido.android.techtask.widget.camera
 import android.Manifest
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.Matrix
 import android.support.annotation.RequiresPermission
 import android.util.AttributeSet
 import android.widget.FrameLayout
 import com.onfido.android.techtask.R
+import com.onfido.android.techtask.widget.camera.frame.CompositeFrameProcessor
+import com.onfido.android.techtask.widget.camera.frame.FrameInfo
+import com.onfido.android.techtask.widget.camera.frame.FrameProcessor
 import com.onfido.android.techtask.widget.camera.util.modifyBitmap
 import io.fotoapparat.Fotoapparat
+import io.fotoapparat.characteristic.LensPosition
 import io.fotoapparat.configuration.CameraConfiguration
 import io.fotoapparat.log.logcat
-import io.fotoapparat.log.loggers
 import io.fotoapparat.parameter.ScaleType
+import io.fotoapparat.preview.Frame
 import io.fotoapparat.selector.back
 import io.fotoapparat.selector.front
 import io.fotoapparat.selector.highestResolution
@@ -36,7 +39,9 @@ class OnfidoCameraView @JvmOverloads constructor(
 
     private val cameraView by lazy { CameraView(context) }
     private val fotoapparat: Fotoapparat by lazy { createFotoapparat() }
+    private val compositeFrameProcessor = CompositeFrameProcessor()
 
+    //attributes
     private var mirroring = false
     private var scaleFactor = DEFAULT_SCALE_FACTOR
 
@@ -104,16 +109,25 @@ class OnfidoCameraView @JvmOverloads constructor(
             }
     }
 
-    // Ref(Step Two): https://github.com/RedApparat/Fotoapparat
-    private fun createFotoapparat(): Fotoapparat {
-        return Fotoapparat(
-            context = context,
-            view = cameraView,
-            scaleType = ScaleType.CenterCrop,
-            lensPosition = front(),
-            logger = loggers(
-                logcat()
-            )
-        )
+    override fun addFrameProcessor(frameProcessor: FrameProcessor) {
+        compositeFrameProcessor += frameProcessor
     }
+
+    override fun removeFrameProcessor(frameProcessor: FrameProcessor) {
+        compositeFrameProcessor -= frameProcessor
+    }
+
+    private fun createFotoapparat(): Fotoapparat {
+        return Fotoapparat.with(context)
+            .into(cameraView)
+            .lensPosition { LensPosition.Front }
+            .previewScaleType(ScaleType.CenterCrop)
+            .frameProcessor {
+                compositeFrameProcessor.processFrame(toFrameInfo(it))
+            }
+            .build()
+    }
+
+    private fun toFrameInfo(frame: Frame): FrameInfo =
+        FrameInfo(frame.size.width, frame.size.height, frame.image, frame.rotation)
 }

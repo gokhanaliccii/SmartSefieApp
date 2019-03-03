@@ -9,7 +9,10 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.widget.Button
 import android.widget.ImageView
+import com.onfido.android.techtask.facedetection.FirebaseFaceDetector
 import com.onfido.android.techtask.widget.camera.OnfidoCameraView
+import com.onfido.android.techtask.widget.camera.facedetection.FaceBound
+import com.onfido.android.techtask.widget.camera.facedetection.FaceDetectionListener
 
 class CameraActivity : AppCompatActivity() {
 
@@ -21,6 +24,7 @@ class CameraActivity : AppCompatActivity() {
     private lateinit var cameraView: OnfidoCameraView
     private lateinit var button: Button
     private lateinit var imagePreview: ImageView
+    private lateinit var firebaseFaceDetector: FirebaseFaceDetector
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,6 +40,17 @@ class CameraActivity : AppCompatActivity() {
                 imagePreview.setImageBitmap(it)
             }
         }
+
+        firebaseFaceDetector = FirebaseFaceDetector()
+        firebaseFaceDetector.faceDetectionListener(object :
+            FaceDetectionListener {
+            override fun onFaceDetected(faceBounds: List<FaceBound>) {
+                Log.d(TAG, "faces detected ${faceBounds.size}")
+            }
+        })
+
+        cameraView.addFrameProcessor(firebaseFaceDetector)
+        firebaseFaceDetector.start()
     }
 
     override fun onStart() {
