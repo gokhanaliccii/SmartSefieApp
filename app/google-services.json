@@ -23,6 +23,14 @@
           }
         },
         {
+          "client_id": "361852350843-bt47n6unrijtbq2k5jjieal7udtcnl0i.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.onfido.android.techtask",
+            "certificate_hash": "b143fa09b31c2acf1827d4c6bca002aeebb4c695"
+          }
+        },
+        {
           "client_id": "361852350843-f40rvjf0b0gggefm90h65ftoag96iqrq.apps.googleusercontent.com",
           "client_type": 3
         }

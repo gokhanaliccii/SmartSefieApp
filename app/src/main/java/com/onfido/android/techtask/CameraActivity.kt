@@ -33,12 +33,12 @@ class CameraActivity : AppCompatActivity() {
         const val STATE_CAMERA_RESULT = "camera_result"
     }
 
-    private val takePicture by bind<Button>(R.id.action_take_picture)
-    private val statefulView by bind<StatefulView>(R.id.stateful_view)
-    private val cameraView by bind<OnfidoCameraView>(R.id.camera_view)
     private lateinit var capturedFrame: View
     private lateinit var capturedPicture: ImageView
     private lateinit var dismissCapturedPicture: View
+    private val takePicture by bind<Button>(R.id.action_take_picture)
+    private val statefulView by bind<StatefulView>(R.id.stateful_view)
+    private val cameraView by bind<OnfidoCameraView>(R.id.camera_view)
 
     private val faceDetector: FirebaseFaceDetector by lazy { FirebaseFaceDetector() }
     private val vibrator by lazy { applicationContext.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator }

@@ -12,7 +12,19 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+
+    signingConfigs {
+        debug {
+            keyAlias 'onfido'
+            keyPassword 'Onfido321'
+            storeFile file('keystore')
+            storePassword 'Onfido321'
+        }
+    }
     buildTypes {
+        debug {
+            signingConfig signingConfigs.debug
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -31,7 +43,7 @@ dependencies {
     implementation libraries.constraintLayout
     implementation libraries.firabeseMLVision
     implementation libraries.firabeseMLFaceModel
-    implementation libraries.rxKotlin 
+    implementation libraries.rxKotlin
     implementation libraries.rxAndroid
 
     testImplementation testLibraries.junit4
