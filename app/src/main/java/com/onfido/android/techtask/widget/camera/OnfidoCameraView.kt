@@ -7,10 +7,14 @@ import android.support.annotation.RequiresPermission
 import android.util.AttributeSet
 import android.widget.FrameLayout
 import io.fotoapparat.Fotoapparat
+import io.fotoapparat.configuration.CameraConfiguration
 import io.fotoapparat.log.logcat
 import io.fotoapparat.log.loggers
 import io.fotoapparat.parameter.ScaleType
+import io.fotoapparat.selector.back
 import io.fotoapparat.selector.front
+import io.fotoapparat.selector.highestResolution
+import io.fotoapparat.selector.lowestResolution
 import io.fotoapparat.view.CameraView
 
 /**
@@ -39,15 +43,38 @@ class OnfidoCameraView @JvmOverloads constructor(
     }
 
     override fun takePicture(pictureCallback: (Bitmap) -> Unit) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        fotoapparat.takePicture()
+            .toBitmap()
+            .whenAvailable {
+                it?.let { bitmapPhoto ->
+                    pictureCallback(bitmapPhoto.bitmap)
+                }
+            }
     }
 
-    override fun switchCamera(position: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun switchCamera(@CameraPosition position: Int) {
+        val lensPosition = when (position) {
+            CameraPosition.FRONT -> front()
+            CameraPosition.BACK -> back()
+            else -> throw IllegalArgumentException("Unknown camera position [$position]")
+        }
+
+        fotoapparat.switchTo(lensPosition, CameraConfiguration.default())
     }
 
-    override fun changePreviewQuality(quality: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun changePreviewQuality(@PreviewQuality quality: Int) {
+        val previewResolution = when (quality) {
+            PreviewQuality.LOW -> lowestResolution()
+            PreviewQuality.HIGH -> highestResolution()
+            else -> throw IllegalArgumentException("Unknown preview quality parameter [$quality]")
+        }
+
+        CameraConfiguration.builder()
+            .previewResolution(previewResolution)
+            .build()
+            .apply {
+                fotoapparat.updateConfiguration(this)
+            }
     }
 
     // Ref(Step Two): https://github.com/RedApparat/Fotoapparat
