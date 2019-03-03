@@ -28,10 +28,15 @@ class OnfidoCameraView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr), CameraPreview {
 
+    private companion object {
+        const val FLIP_FACTOR = -1f
+        const val DEFAULT_SCALE_FACTOR = 0.25f
+    }
+
     private val cameraView by lazy { CameraView(context) }
     private val fotoapparat: Fotoapparat by lazy { createFotoapparat() }
 
-    private var scaleFactor = 0.25f
+    private var scaleFactor = DEFAULT_SCALE_FACTOR
 
     init {
 
@@ -62,7 +67,7 @@ class OnfidoCameraView @JvmOverloads constructor(
         fotoapparat.takePicture()
             .toBitmap()
             .transform {
-                scaleBitmap(it.bitmap, scaleFactor)
+                scaleBitmap(it.bitmap, scaleFactor, it.rotationDegrees)
             }
             .whenAvailable {
                 it?.let { bitmapPhoto ->
@@ -109,9 +114,10 @@ class OnfidoCameraView @JvmOverloads constructor(
         )
     }
 
-    private fun scaleBitmap(rawBitmap: Bitmap, scaleFactor: Float): Bitmap {
+    private fun scaleBitmap(rawBitmap: Bitmap, scaleFactor: Float, rotationDegree: Int): Bitmap {
         val matrix = Matrix()
         matrix.postScale(scaleFactor, scaleFactor)
+        matrix.postRotate(rotationDegree * FLIP_FACTOR)
 
         val resizedBitmap = Bitmap.createBitmap(
             rawBitmap, 0, 0, rawBitmap.width, rawBitmap.height, matrix, false

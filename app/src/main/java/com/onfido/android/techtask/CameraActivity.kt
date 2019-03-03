@@ -8,6 +8,7 @@ import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.widget.Button
+import android.widget.ImageView
 import com.onfido.android.techtask.widget.camera.OnfidoCameraView
 
 class CameraActivity : AppCompatActivity() {
@@ -19,6 +20,7 @@ class CameraActivity : AppCompatActivity() {
 
     private lateinit var cameraView: OnfidoCameraView
     private lateinit var button: Button
+    private lateinit var imagePreview: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,10 +28,12 @@ class CameraActivity : AppCompatActivity() {
 
         cameraView = findViewById(R.id.camera_view)
         button = findViewById(R.id.action_take_picture)
+        imagePreview = findViewById(R.id.imageview_picture_preview)
 
         button.setOnClickListener {
             cameraView.takePicture {
                 Log.d(TAG, "picture received! ${it.width} ${it.height}")
+                imagePreview.setImageBitmap(it)
             }
         }
     }
