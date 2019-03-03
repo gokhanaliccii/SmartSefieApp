@@ -3,6 +3,7 @@
 
     <declare-styleable name="OnfidoCameraView">
         <attr name="scaleFactor" format="float" />
+        <attr name="mirrorTakenPicture" format="boolean" />
     </declare-styleable>
 
 </resources>

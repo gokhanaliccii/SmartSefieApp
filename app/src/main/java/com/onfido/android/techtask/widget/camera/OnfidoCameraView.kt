@@ -29,13 +29,15 @@ class OnfidoCameraView @JvmOverloads constructor(
 ) : FrameLayout(context, attrs, defStyleAttr), CameraPreview {
 
     private companion object {
-        const val FLIP_FACTOR = -1f
+        const val FLIP = -1f
+        const val NOT_FLIP = 1f
         const val DEFAULT_SCALE_FACTOR = 0.25f
     }
 
     private val cameraView by lazy { CameraView(context) }
     private val fotoapparat: Fotoapparat by lazy { createFotoapparat() }
 
+    private var mirroring = false
     private var scaleFactor = DEFAULT_SCALE_FACTOR
 
     init {
@@ -50,6 +52,8 @@ class OnfidoCameraView @JvmOverloads constructor(
     private fun processAttributes(context: Context, attrs: AttributeSet?) {
         val typedArray =
             context.obtainStyledAttributes(attrs, R.styleable.OnfidoCameraView)
+        mirroring =
+            typedArray.getBoolean(R.styleable.OnfidoCameraView_mirrorTakenPicture, mirroring)
         scaleFactor = typedArray.getFloat(R.styleable.OnfidoCameraView_scaleFactor, scaleFactor)
         typedArray.recycle()
     }
@@ -67,7 +71,7 @@ class OnfidoCameraView @JvmOverloads constructor(
         fotoapparat.takePicture()
             .toBitmap()
             .transform {
-                scaleBitmap(it.bitmap, scaleFactor, it.rotationDegrees)
+                scaleBitmap(it.bitmap, scaleFactor, it.rotationDegrees, mirroring)
             }
             .whenAvailable {
                 it?.let { bitmapPhoto ->
@@ -114,10 +118,18 @@ class OnfidoCameraView @JvmOverloads constructor(
         )
     }
 
-    private fun scaleBitmap(rawBitmap: Bitmap, scaleFactor: Float, rotationDegree: Int): Bitmap {
+    private fun scaleBitmap(
+        rawBitmap: Bitmap,
+        scaleFactor: Float,
+        rotationDegree: Int,
+        mirrorBitmap: Boolean = false
+    ): Bitmap {
         val matrix = Matrix()
         matrix.postScale(scaleFactor, scaleFactor)
-        matrix.postRotate(rotationDegree * FLIP_FACTOR)
+        matrix.postRotate(rotationDegree * FLIP)
+        if (mirrorBitmap) {
+            matrix.preScale(NOT_FLIP, FLIP)
+        }
 
         val resizedBitmap = Bitmap.createBitmap(
             rawBitmap, 0, 0, rawBitmap.width, rawBitmap.height, matrix, false
