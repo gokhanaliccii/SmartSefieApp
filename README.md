@@ -2,7 +2,8 @@
 
 Simple selfie application which capture images automatically when face
 detected. For face detection firebase ml-kit used. During the project
-development Kotlin used
+development Kotlin used. Detekt and ktlint static code analzer tools
+integrated
 
 ### Idea:
 The app is a simple selfie taking app, where users must be able to take

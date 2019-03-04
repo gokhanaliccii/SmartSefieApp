@@ -36,7 +36,7 @@ class CameraActivity : AppCompatActivity() {
     private lateinit var capturedFrame: View
     private lateinit var capturedPicture: ImageView
     private lateinit var dismissCapturedPicture: View
-    private val takePicture by bind<Button>(R.id.action_take_picture)
+    private val takePicture by bind<ImageView>(R.id.action_take_picture)
     private val statefulView by bind<StatefulView>(R.id.stateful_view)
     private val cameraView by bind<OnfidoCameraView>(R.id.camera_view)
 
