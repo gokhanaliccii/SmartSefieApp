@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="StatefulView">
+        <attr name="state" format="string" />
+        <attr name="keepOnStack" format="boolean" />
+        <attr name="initialState" format="string" />
+    </declare-styleable>
+</resources>

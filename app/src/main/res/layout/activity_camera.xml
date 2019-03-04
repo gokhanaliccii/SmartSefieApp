@@ -1,9 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+<com.onfido.android.techtask.widget.StatefulView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/stateful_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:initialState="camera_view"
+    tools:context=".CameraActivity">
+
+    <com.onfido.camera.OnfidoCameraView
+        android:id="@+id/camera_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".CameraActivity">
+        app:scaleFactor="0.50"
+        app:state="@string/state_camera_preview" />
 
-</android.support.constraint.ConstraintLayout>
+    <include layout="@layout/view_picture_result" />
+
+    <ImageView
+        android:id="@+id/action_take_picture"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="30dp"
+        android:src="@drawable/shape_light_gray_oval"
+        android:stateListAnimator="@animator/sl_state_animator" />
+
+</com.onfido.android.techtask.widget.StatefulView>

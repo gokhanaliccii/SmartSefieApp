@@ -1,0 +1,63 @@
+{
+  "project_info": {
+    "project_number": "361852350843",
+    "firebase_url": "https://onfido-android-tech-task.firebaseio.com",
+    "project_id": "onfido-android-tech-task",
+    "storage_bucket": "onfido-android-tech-task.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:361852350843:android:755e19c0ba5876a2",
+        "android_client_info": {
+          "package_name": "com.onfido.android.techtask"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "361852350843-flrftmr4n4h3d7kaupotp3uq9d5hocl6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.onfido.android.techtask",
+            "certificate_hash": "45065149ad5cd35fedeabe76186ecee1f76f8977"
+          }
+        },
+        {
+          "client_id": "361852350843-bt47n6unrijtbq2k5jjieal7udtcnl0i.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.onfido.android.techtask",
+            "certificate_hash": "b143fa09b31c2acf1827d4c6bca002aeebb4c695"
+          }
+        },
+        {
+          "client_id": "361852350843-f40rvjf0b0gggefm90h65ftoag96iqrq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA5d2C1Kf8xeybYVHb1NH8dROXL6F-wh9A"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "361852350843-f40rvjf0b0gggefm90h65ftoag96iqrq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
